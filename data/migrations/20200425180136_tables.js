@@ -15,22 +15,26 @@ exports.up = function(knex) {
             table.text('password', 255)
             .notNullable();
         })
+
         .createTable('roles', table => {
             table.increments();
 
             table.text('roleType', 255)
             .notNullable(); 
         })
+
         .createTable('classTypes', table =>{
             table.increments();
 
             table.text('type')
         })
+
         .createTable('imgOptions', table =>{
             table.increments();
 
             table.text('url');
         })
+
         .createTable('classes', table => {
             table.increments();
 
@@ -64,24 +68,23 @@ exports.up = function(knex) {
             .onDelete('RESTRICT') 
             .onUpdate('RESTRICT');
         })
+
         .createTable('accountRoles', table => {
-            table
-            .integer('accountId')
+            table.integer('accountId')
             .notNullable()
             .references('accounts.id')
             .onDelete('RESTRICT') 
             .onUpdate('CASCADE');
 
-            table
-            .integer('roleId')
+            table.integer('roleId')
             .notNullable()
-            .references("id")
-            .inTable("roles")
+            .references('roles.id')
             .onDelete('RESTRICT') 
             .onUpdate('CASCADE');
 
             table.primary(['accountId', 'roleId']);
         })
+
         .createTable('classAttendees', table => {
             table
             .integer('accountId')
@@ -99,6 +102,7 @@ exports.up = function(knex) {
 
             table.primary(['accountId', 'classId']);
         })
+
         .createTable('classInstructor', table => {
             table
             .integer('instructorId')

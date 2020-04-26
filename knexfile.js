@@ -14,6 +14,16 @@ module.exports = {
     }
   },
 
+  test: {
+    client: 'pg',
+    connection: `${process.env.TEST_DB}`,
+    migrations: {
+      directory: './data/migrations'
+    },
+    seeds: {
+      directory: './data/seeds'
+    }
+  },
 
   production: {
     client: 'pg',

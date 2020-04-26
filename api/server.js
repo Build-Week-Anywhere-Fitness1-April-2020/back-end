@@ -11,6 +11,10 @@ server.use(helmet());
 server.use(cors());
 server.use(express.json());
 
-server.use('/auth/register', authRouter);
+server.use('/auth', authRouter);
+
+server.get('/', (req, res) => {
+    res.status(200).json({ message: 'Server up' })
+})
 
 module.exports = server;
