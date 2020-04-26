@@ -5,11 +5,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
 lerna-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+<<<<<<< HEAD
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
+=======
 >>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
 
 # Runtime data
@@ -24,6 +30,10 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+*.lcov
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
 =======
 *.lcov
 >>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
@@ -48,14 +58,20 @@ node_modules/
 jspm_packages/
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # TypeScript v1 declaration files
 typings/
 =======
+=======
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
 # TypeScript cache
 *.tsbuildinfo
+<<<<<<< HEAD
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
+=======
 >>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
 
 # Optional npm cache directory
@@ -65,13 +81,19 @@ web_modules/
 .eslintcache
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/
 .rts2_cache_es/
 .rts2_cache_umd/
 
+<<<<<<< HEAD
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
+=======
 >>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
 # Optional REPL history
 .node_repl_history
@@ -89,6 +111,7 @@ web_modules/
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 # next.js build output
 .next
@@ -96,6 +119,8 @@ web_modules/
 # nuxt.js build output
 .nuxt
 =======
+=======
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
 .parcel-cache
 
 # Next.js build output
@@ -110,6 +135,9 @@ dist
 # Comment in the public line in if your project uses Gatsby and not Next.js
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
+<<<<<<< HEAD
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
+=======
 >>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
 
 # vuepress build output
@@ -123,8 +151,11 @@ dist
 
 # DynamoDB Local files
 <<<<<<< HEAD
+<<<<<<< HEAD
 .dynamodb/
 =======
+=======
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
 .dynamodb/
 
 # TernJS port file
@@ -139,4 +170,7 @@ dist
 .yarn/unplugged
 .yarn/build-state.yml
 .pnp.*
+<<<<<<< HEAD
+>>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
+=======
 >>>>>>> 713c88e9c1a7630240d9ce7c27b45da91d4c72f4
