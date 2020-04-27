@@ -1,7 +1,6 @@
 exports.seed = function(knex) {
     // Deletes ALL existing entries
-    return knex('classTypes') 
-    .del()
+    return knex('classTypes').where('id', '>', '0').del()
     .then(function() {
         // Inserts seed entries
         return knex('classTypes').insert([

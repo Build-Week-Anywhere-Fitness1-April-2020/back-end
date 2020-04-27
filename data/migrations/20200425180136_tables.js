@@ -59,14 +59,14 @@ exports.up = function(knex) {
             table.integer('classType')
             .notNullable()
             .references('classTypes.id')
-            .onDelete('CASCADE') 
-            .onUpdate('CASCADE');
+            .onDelete('RESTRICT') 
+            .onUpdate('RESTRICT');
 
             table.integer('imgUrl')
             .notNullable()
             .references('imgOptions.id')
-            .onDelete('CASCADE') 
-            .onUpdate('CASCADE')
+            .onDelete('RESTRICT') 
+            .onUpdate('RESTRICT')
 
         })
 
@@ -74,13 +74,13 @@ exports.up = function(knex) {
             table.integer('accountId')
             .notNullable()
             .references('accounts.id')
-            .onDelete('CASCADE') 
+            .onDelete('RESTRICT') 
             .onUpdate('CASCADE');
 
             table.integer('roleId')
             .notNullable()
             .references('roles.id')
-            .onDelete('CASCADE') 
+            .onDelete('RESTRICT') 
             .onUpdate('CASCADE');
 
             table.primary(['accountId', 'roleId']);
@@ -91,7 +91,7 @@ exports.up = function(knex) {
             .integer('accountId')
             .notNullable()
             .references('accounts.id')
-            .onDelete('CASCADE') 
+            .onDelete('RESTRICT') 
             .onUpdate('CASCADE');
 
             table
@@ -109,7 +109,7 @@ exports.up = function(knex) {
             .integer('instructorId')
             .notNullable()
             .references('accounts.id')
-            .onDelete('CASCADE') 
+            .onDelete('RESTRICT') 
             .onUpdate('CASCADE');
 
             table
