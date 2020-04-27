@@ -14,7 +14,7 @@ server.use(cors());
 server.use(express.json());
 
 server.use('/auth', authRouter);
-server.use('/classes', authenticator, classesRouter);
+server.use('/classes', classesRouter);
 
 server.get('/', (req, res) => {
     res.status(200).json({ message: 'Server up' })

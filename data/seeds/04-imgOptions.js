@@ -1,5 +1,5 @@
 exports.seed = function(knex) {
-    return knex("imgOptions").where('id', '>', '0').del()
+    return knex("imgOptions").where('id', '>', '0')
       .then(function() {
         // Inserts seed entries
         return knex("imgOptions").insert([

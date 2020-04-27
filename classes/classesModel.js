@@ -7,12 +7,13 @@ module.exports = {
 }
 
 function getClasses(){
-    return db('classes');
+    return db('classes').select("id", "name", "dateTime", "duration", "intensity", "location", "maxSize", "classType", "imgUrl");
 }
 
 function getById(id){
     return db('classes')
-        .where({id});
+        .where({id})
+        .first();
 }
 
 function addClass(newClass){
