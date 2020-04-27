@@ -59,27 +59,28 @@ exports.up = function(knex) {
             table.integer('classType')
             .notNullable()
             .references('classTypes.id')
-            .onDelete('RESTRICT') 
-            .onUpdate('RESTRICT');
+            .onDelete('CASCADE') 
+            .onUpdate('CASCADE');
 
             table.integer('imgUrl')
             .notNullable()
             .references('imgOptions.id')
-            .onDelete('RESTRICT') 
-            .onUpdate('RESTRICT');
+            .onDelete('CASCADE') 
+            .onUpdate('CASCADE')
+
         })
 
         .createTable('accountRoles', table => {
             table.integer('accountId')
             .notNullable()
             .references('accounts.id')
-            .onDelete('RESTRICT') 
+            .onDelete('CASCADE') 
             .onUpdate('CASCADE');
 
             table.integer('roleId')
             .notNullable()
             .references('roles.id')
-            .onDelete('RESTRICT') 
+            .onDelete('CASCADE') 
             .onUpdate('CASCADE');
 
             table.primary(['accountId', 'roleId']);
@@ -90,7 +91,7 @@ exports.up = function(knex) {
             .integer('accountId')
             .notNullable()
             .references('accounts.id')
-            .onDelete('RESTRICT') 
+            .onDelete('CASCADE') 
             .onUpdate('CASCADE');
 
             table
@@ -108,7 +109,7 @@ exports.up = function(knex) {
             .integer('instructorId')
             .notNullable()
             .references('accounts.id')
-            .onDelete('RESTRICT') 
+            .onDelete('CASCADE') 
             .onUpdate('CASCADE');
 
             table
