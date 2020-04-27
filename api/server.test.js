@@ -12,7 +12,7 @@ describe('Server', () => {
         done();
     })
     it('Testing DB path', () => {
-        expect(process.env.TEST_DB).toBe('postgres://localhost/af_test');
+        expect(process.env.TEST_DB).toBe('af_test');
     })
 });
 
