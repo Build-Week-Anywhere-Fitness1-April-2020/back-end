@@ -14,6 +14,11 @@ exports.up = function(knex) {
 
             table.text('password', 255)
             .notNullable();
+
+            table.text('displayName')
+            .notNullable();
+
+            table.text('gender')
         })
 
         .createTable('roles', table => {
@@ -35,16 +40,23 @@ exports.up = function(knex) {
             table.text('url');
         })
 
+        .createTable('days', table => {
+            table.increments();
+
+            table.text('day')
+            .notNullable();
+        })
+
         .createTable('classes', table => {
             table.increments();
 
             table.text('name')
             .notNullable();
 
-            table.text('dateTime')
+            table.text('time')
             .notNullable();
 
-            table.text('duration')
+            table.double('duration')
             .notNullable();
 
             table.text('intensity')
@@ -68,19 +80,80 @@ exports.up = function(knex) {
             .onDelete('RESTRICT') 
             .onUpdate('RESTRICT')
 
+            table.text('equiptmentRequired');
+
+            table.text('arrivalDescription');
+
+            table.text('additionalInfo');
+
+            table.double('cost')
+            .notNullable();
+
+            table.text('description')
+            .notNullable();
+
+            table.text('address')
+            .notNullable();
+
+            table.text('startDate')
+            .notNullable();
         })
 
-        .createTable('accountRoles', table => {
+        // Join tables for many to many relationships
+
+        .createTable('classesEnrolled', table => {
             table.integer('accountId')
             .notNullable()
             .references('accounts.id')
             .onDelete('RESTRICT') 
             .onUpdate('CASCADE');
 
+            table.integer('classId')
+            .notNullable()
+            .references('classes.id')
+            .onDelete('CASCADE') 
+            .onUpdate('CASCADE');
+        })
+
+        .createTable('classesInstructing', table => {
+            table.integer('accountId')
+            .notNullable()
+            .references('accounts.id')
+            .onDelete('RESTRICT') 
+            .onUpdate('CASCADE');
+
+            table.integer('classId')
+            .notNullable()
+            .references('classes.id')
+            .onDelete('CASCADE') 
+            .onUpdate('CASCADE');
+        })
+
+        .createTable('classDays', table => {
+            table.integer('classId')
+            .notNullable()
+            .references('classes.id')
+            .onDelete('CASCADE') 
+            .onUpdate('CASCADE');
+            
+            table.integer('dayId')
+            .notNullable()
+            .references('days.id')
+            .onDelete('CASCADE') 
+            .onUpdate('CASCADE');
+        })
+
+        .createTable('accountRoles', table => {
+            table.integer('accountId')
+            .notNullable()
+            .references('accounts.id')
+            .onDelete('CASCADE') 
+            .onUpdate('CASCADE');
+
             table.integer('roleId')
             .notNullable()
             .references('roles.id')
-            .onDelete('RESTRICT') 
+            .onDelete('CASCADE') 
             .onUpdate('CASCADE');
 
             table.primary(['accountId', 'roleId']);
@@ -125,12 +198,16 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
     return knex.schema
+        .dropTableIfExists('classesEnrolled')
+        .dropTableIfExists('classesInstructing')
         .dropTableIfExists('classInstructor')
         .dropTableIfExists('classAttendees')
         .dropTableIfExists('accountRoles')
+        .dropTableIfExists('classDays')
         .dropTableIfExists('classes')
         .dropTableIfExists('imgOptions')
         .dropTableIfExists('classTypes')
         .dropTableIfExists('roles')
+        .dropTableIfExists('days')
         .dropTableIfExists('accounts')
 };
