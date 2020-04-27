@@ -5,14 +5,13 @@ exports.seed = function(knex) {
         // Inserts seed entries
         return knex("classes").insert([
           {
-          
             name: "Hot Yoga",
             dateTime: "2020-11-7 9AM",
             duration: "30 min",
             intensity: "expert",
             location: "New Jersey",
             maxSize: "16",
-            classType: 1,
+            classType: 5,
             imgUrl:1
           },
           {
@@ -24,7 +23,7 @@ exports.seed = function(knex) {
             location: "New Jersey",
             maxSize: "16",
             classType: 2,
-            imgUrl:1
+            imgUrl:2
           },
           {
            
@@ -35,7 +34,7 @@ exports.seed = function(knex) {
             location: "New Jersey",
             maxSize: "16",
             classType: 1,
-            imgUrl:1
+            imgUrl:3
           },
           {
             
@@ -45,9 +44,20 @@ exports.seed = function(knex) {
             intensity: "beginner",
             location: "New Jersey",
             maxSize: "16",
-            classType: 2,
+            classType: 4,
             imgUrl:1
-          }
+          },
+          {
+           
+            name: "Running",
+            dateTime: "2020-11-7 12AM",
+            duration: "60 min",
+            intensity: "expert",
+            location: "New Jersey",
+            maxSize: "12",
+            classType: 3,
+            imgUrl:3
+          },
         ]);
       });
   };

@@ -8,13 +8,13 @@ exports.seed = function(knex) {
       return knex("accounts").insert([
         {
           username: "instructor1",
-          email: "instructor@gmail.com",
+          email: "instructor1@gmail.com",
           password: bcrypt.hashSync("test1"),
         },
         {
       
-          username: "inst2",
-          email: "inst2@gmail.com",
+          username: "insttuctor2",
+          email: "inststructor2@gmail.com",
           password: bcrypt.hashSync("test2"),
         },
         {
@@ -25,7 +25,7 @@ exports.seed = function(knex) {
         },
         {
        
-            username: "cli2",
+            username: "client2",
             email: "client2@gmail.com",
             password: bcrypt.hashSync("test4"),
         }
