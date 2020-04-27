@@ -7,7 +7,7 @@ exports.seed = function(knex) {
           {
             id: 1,
             name: "Hot Yoga",
-            dateTime: "2020-11-7 9AM",
+            time: "2020-11-7 9AM",
             duration: 1.5,
             intensity: "expert",
             location: "New Jersey",
@@ -25,8 +25,8 @@ exports.seed = function(knex) {
           {
             id: 2,
             name: "Boxing",
-            dateTime: "2020-11-7 9AM",
-            duration: "30 min",
+            time: "2020-11-7 9AM",
+            duration: 1.5,
             intensity: "expert",
             location: "New Jersey",
             maxSize: "16",
@@ -43,8 +43,8 @@ exports.seed = function(knex) {
           {
             id: 3,
             name: "Pilates",
-            dateTime: "2020-11-7 9AM",
-            duration: "30 min",
+            time: "2020-11-7 9AM",
+            duration: 1.5,
             intensity: "beginner",
             location: "New Jersey",
             maxSize: "16",
@@ -61,8 +61,8 @@ exports.seed = function(knex) {
           {
             id: 4,
             name: "Lifting",
-            dateTime: "2020-11-7 9AM",
-            duration: "30 min",
+            time: "2020-11-7 9AM",
+            duration: 1.5,
             intensity: "beginner",
             location: "New Jersey",
             maxSize: "16",
@@ -79,8 +79,8 @@ exports.seed = function(knex) {
           {
             id: 5,
             name: "Running",
-            dateTime: "2020-11-7 12AM",
-            duration: "60 min",
+            time: "2020-11-7 12AM",
+            duration: 1.5,
             intensity: "expert",
             location: "New Jersey",
             maxSize: "12",
