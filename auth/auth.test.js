@@ -9,7 +9,7 @@ beforeEach(async () => {
 });
 
 describe('201 Post to register', () => {
-    it('201 Status', async done => {
+    it('201 Status Register', async done => {
         const res = await request(server)
             .post('/auth/register')
             .send({

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const generateToken = require('../utils/generateToken');
 
 const User = require('./authModel');
 
@@ -79,17 +79,6 @@ router.post('/login', validateLoginBody, (req, res) => {
         res.status(500).json(err)
     })
 })
-
-function generateToken(user) {
-    const payload = {
-        sub: user.id,
-    };
-    const secret = process.env.JWT_SECRET || 'This is a secret';
-    const options = {
-        expiresIn: '1h'
-    }
-    return jwt.sign(payload, secret, options);
-}
 
 function validateRegisterBody(req, res, next){
     const body = req.body;
