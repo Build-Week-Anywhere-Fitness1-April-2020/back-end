@@ -131,8 +131,8 @@ describe('Add class', () => {
     })
 })
 
-describe('GET class by id', () => {
-    it('200 status', async done => {
+
+    it('200 status get by ID', async done => {
         const token = generateToken({
             id: 1
         });
@@ -148,7 +148,7 @@ describe('GET class by id', () => {
         done();
         
     })
-})
+
 
 describe("PUT to classes/:id", function() {
     it('200 status', async done => {

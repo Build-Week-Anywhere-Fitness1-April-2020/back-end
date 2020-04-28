@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Class = require('../classes/classesModel');
-// const Attendee = require('../')
+const Attendee = require('../classes/classesModel')
 
 
 /////////////////~~~~~~~~~~~CLASSES SECTION~~~~~~~~~~~~~~~~~~~~~~~///////////
@@ -77,7 +77,32 @@ router.put('/:id', (req, res) => {
 
 
 /////////////////~~~~~~~~~~~ATTENDEE SECTION~~~~~~~~~~~~~~~~~~~~~~~///////////
-router.post('/', (req, res) => {
+// router.get('/:id/attendee', (req, res) => {
+//   Attendee.getAttendee()
+//   .then(attendee => {
+//       res.status(200).json(attendee);
+//   })
+//   .catch(err => {
+//       res.status(500).json({message: 'Failed to get Class Attendees'} );
+//   })
+// })
+
+router.get('/:id/attendee', async (req, res) => {
+  // Get the account ids that match the given class
+  const accountIds = await Class.getAccountIds(req.params.id);
+  let accounts = [];
+  for(let i=0; i<accountIds.length; i++){
+    let account = await Class.getAccountById(accountIds[i].accountId);
+    accounts.push({
+      ...account[0],
+      password: undefined
+    });
+  }
+  res.status(200).json(accounts);
+})
+
+
+router.post('/attendee', (req, res) => {
   const attendeeData = req.body;
 
   Attendee.addAttendee(attendeeData)
@@ -89,7 +114,7 @@ router.post('/', (req, res) => {
   });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id/Attendee', (req, res) => {
   const { id } = req.params;
 
   Attendee.removeAttendee(id)
