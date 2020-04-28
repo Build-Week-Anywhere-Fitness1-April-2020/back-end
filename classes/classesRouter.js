@@ -164,6 +164,32 @@ router.get('/:id/attendees', async (req, res) => {
   res.status(200).json(accounts);
 })
 
+router.post("/addattendee/:id", async (req, res) => {
+  const classId = parseInt(req.params.id);
+  const accountId = parseInt(req.body);
+  const classes = { classId, accountId };
+  try {
+    await Class.addAttendee(classes);
+    res.status(201).json({ message: "Added Attendee" });
+  } catch (err) {
+    res.status(500).json({ message: "no work :(", err });
+  }
+});
+
+router.delete("/removeattendee/:id", (req, res) => {
+  const classId = req.params.id;
+  const accountId = req.body;
+
+  Class.removeAttendee(classId, accountId)
+    .then(classes => {
+      res.status(200).json(classes);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "client still enrolled in class" });
+    });
+});
+
+
 
 function validateNewClass(req, res, next){
     const body = req.body;

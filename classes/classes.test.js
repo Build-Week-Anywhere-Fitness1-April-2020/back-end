@@ -167,7 +167,3 @@ describe("PUT to classes/:id", function() {
         done();
     });
   });
-
-  
-
-
