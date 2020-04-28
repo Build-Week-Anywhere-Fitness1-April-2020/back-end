@@ -7,7 +7,10 @@ module.exports = {
     removeClass,
     updateClass,
     getAccountIds,
-    getAccountById
+    getAccountById,
+    getClassInstructor,
+    getImgUrl,
+    getClassType
 }
 
 function getClasses(){
@@ -48,3 +51,21 @@ function getAccountById(id){
     return db('accounts').where({id});
 }
 
+function getClassInstructor(classId){
+    return db.select('a.displayName')
+        .from('classInstructor as ci')
+        .where({classId})
+        .join('accounts as a', 'ci.instructorId', 'a.id')
+}
+
+function getImgUrl(classImg){
+    return db.select('url')
+        .from('imgOptions')
+        .where('id', classImg);
+}
+
+function getClassType(classType){
+    return db.select('type')
+        .from('classTypes')
+        .where('id', classType)
+}

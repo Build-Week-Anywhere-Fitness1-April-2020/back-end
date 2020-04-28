@@ -5,7 +5,6 @@ exports.seed = function(knex) {
         // Inserts seed entries
         return knex("classes").insert([
           {
-            id: 1,
             name: "Hot Yoga",
             time: "2020-11-7 9AM",
             duration: 1.5,
@@ -23,7 +22,6 @@ exports.seed = function(knex) {
             startDate: '01-01-2020'
           },
           {
-            id: 2,
             name: "Boxing",
             time: "2020-11-7 9AM",
             duration: 1.5,
@@ -41,7 +39,6 @@ exports.seed = function(knex) {
             startDate: '01-05-2020'
           },
           {
-            id: 3,
             name: "Pilates",
             time: "2020-11-7 9AM",
             duration: 1.5,
@@ -59,7 +56,6 @@ exports.seed = function(knex) {
             startDate: '02-15-2020'
           },
           {
-            id: 4,
             name: "Lifting",
             time: "2020-11-7 9AM",
             duration: 1.5,
@@ -77,7 +73,6 @@ exports.seed = function(knex) {
             startDate: '06-01-2020'
           },
           {
-            id: 5,
             name: "Running",
             time: "2020-11-7 12AM",
             duration: 1.5,

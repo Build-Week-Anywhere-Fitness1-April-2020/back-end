@@ -2,43 +2,49 @@ const express = require('express');
 const router = express.Router();
 const Class = require('./classesModel');
 
-
-router.get('/', (req, res) => {
-    Class.getClasses()
-    .then(classes => {
-        res.status(200).json(classes);
-    })
-    .catch(err => {
-        res.status(500).json({
-          message: 'Failed to get classes',
-          error: err
-        });
-    })
-})
-
-router.get('/:id', (req, res) => {
-    Class.getById(req.params.id)
-    .then(newClass => {
-        res.status(200).json(newClass);
-    })
-    .catch(err => {
-        res.status(500).json(err);
-    })
-})
-
-/*
-    Expect
-    {
-        name,
-        dateTime,
-        duration,
-        intensity,
-        location,
-        maxSize,
-        classType,
-        imgUrl
+// Get list of classes
+router.get('/', async (req, res) => {xw
+    try {
+      let classList = await Class.getClasses();
+      for(let i=0; i<classList.length; i++){
+        let instructor = await Class.getClassInstructor(classList[i].id);
+        let imgUrl = await Class.getImgUrl(classList[i].imgUrl);
+        let classType = await Class.getClassType(classList[i].classType);
+        classList[i] = {
+          ...classList[i],
+          instructor: instructor[0].displayName,
+          imgUrl: imgUrl[0].url,
+          classType: classType[0].type
+        }
+      }
+      res.status(200).json(classList);
     }
-*/
+    catch(err){
+      res.status(500).json(err);
+    }
+    
+})
+
+// Get class by id
+router.get('/:id', async (req, res) => {
+    try {
+      let foundClass = await Class.getById(req.params.id);
+      let instructor = await Class.getClassInstructor(req.params.id);
+      let imgUrl = await Class.getImgUrl(foundClass[0].imgUrl);
+      let classType = await Class.getClassType(foundClass[0].classType);
+      console.log(classType);
+      res.status(200).json({
+        ...foundClass[0],
+        instructor: instructor[0].displayName,
+        imgUrl: imgUrl[0].url,
+        classType: classType[0].type
+      });
+    }
+    catch(err){
+      res.status(500).json(err);
+    }
+})
+
 router.post('/', validateNewClass, (req, res) => {
   const classData = req.body;
 
