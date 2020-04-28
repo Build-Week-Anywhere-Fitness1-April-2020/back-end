@@ -20,6 +20,8 @@ router.post('/register', validateRegisterBody, (req, res) => {
             username: text(at least 6 chars),
             email: text,
             password: text(at least 8 chars),
+            displayName: text,
+            gender: text(optional),
             roles: [instructor || client](at least 1 element)
         }
         // DO NOT pass roles to the account DB
@@ -27,7 +29,10 @@ router.post('/register', validateRegisterBody, (req, res) => {
    User.addAccount({
        username: req.body.username,
        email: req.body.email,
-       password: req.body.password
+       password: req.body.password,
+       displayName: req.body.displayName ? req.body.displayName : req.body.username,
+       gender: req.body.gender ? req.body.gender : 'none'
+
    })
    .then(async id => {
        for(let i=0; i<req.body.roles.length; i++){

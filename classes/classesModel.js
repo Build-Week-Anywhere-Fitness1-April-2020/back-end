@@ -6,18 +6,18 @@ module.exports = {
     addClass,
     removeClass,
     updateClass,
-    addAttendee,
-    removeAttendee
+    getAccountIds,
+    getAccountById
 }
 
 function getClasses(){
-    return db('classes')
+    return db('classes');
    
 }
 
 function getById(id){
     return db('classes')
-        .where({id})
+        .where({id});
 }
 
 function addClass(newClass){
@@ -37,19 +37,14 @@ function removeClass(id){
 function updateClass(changes, id){
     return db('classes')
     .where({id})
-    .update(changes)
-    
+    .update(changes);
 }
 
-function addAttendee(newAttendee, id){
-    return db('classAttendees')
-    .insert(newAttendee)
+function getAccountIds(classId){
+    return db.select('accountId').from('classAttendees').where({classId});
 }
-function removeAttendee(id){
-    return db('classAttendees')
-    .where({id})
-    .del()
-    .then(() => {
-        return getClasses(id);
-      });
+
+function getAccountById(id){
+    return db('accounts').where({id});
 }
+

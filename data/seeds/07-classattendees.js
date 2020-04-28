@@ -6,7 +6,8 @@ exports.seed = function(knex) {
       return knex("classAttendees").insert([
         { accountId: 1, classId: 1 },
         { accountId: 2, classId: 2 },
-        { accountId: 2, classId: 3 }
+        { accountId: 2, classId: 3 },
+        { accountId: 2, classId: 1}
       ]);
     });
 };
