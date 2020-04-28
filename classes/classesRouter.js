@@ -10,11 +10,17 @@ router.get('/', async (req, res) => {
         let instructor = await Class.getClassInstructor(classList[i].id);
         let imgUrl = await Class.getImgUrl(classList[i].imgUrl);
         let classType = await Class.getClassType(classList[i].classType);
+        let foundDays = await Class.getDays(classList[i].id);
+        let days = [];
+        for(let k=0; k<foundDays.length; k++){
+          days.push(foundDays[k].day);
+        }
         classList[i] = {
           ...classList[i],
           instructor: instructor[0].displayName,
           imgUrl: imgUrl[0].url,
-          classType: classType[0].type
+          classType: classType[0].type,
+          days
         }
       }
       res.status(200).json(classList);
@@ -32,11 +38,17 @@ router.get('/:id', async (req, res) => {
       let instructor = await Class.getClassInstructor(req.params.id);
       let imgUrl = await Class.getImgUrl(foundClass[0].imgUrl);
       let classType = await Class.getClassType(foundClass[0].classType);
+      let foundDays = await Class.getDays(req.params.id);
+      let days = [];
+      for(let i=0; i<foundDays.length; i++){
+        days.push(foundDays[i].day);
+      }
       res.status(200).json({
         ...foundClass[0],
         instructor: instructor[0].displayName,
         imgUrl: imgUrl[0].url,
-        classType: classType[0].type
+        classType: classType[0].type,
+        days
       });
     }
     catch(err){
@@ -47,7 +59,7 @@ router.get('/:id', async (req, res) => {
 /*
   Expect:
   {
-    accountId: int (the user creating this class) *,
+    instructor: int (the user creating this class) *,
     name: string (name of class) *,
     time: string (time for class) *,
     duration: string *,
@@ -68,7 +80,7 @@ router.get('/:id', async (req, res) => {
 */
 router.post('/', validateNewClass, async (req, res) => {
   try {
-    let instructor = req.body.accountId;
+    let instructor = req.body.instructor;
     let days = [];
     for(let i=0; i<req.body.days.length; i++){
       days.push(req.body.days[i]);
@@ -78,7 +90,7 @@ router.post('/', validateNewClass, async (req, res) => {
       ...req.body
     }
 
-    delete newClass.accountId;
+    delete newClass.instructor;
     delete newClass.days;
 
     // Add new class to classes table and get the id of the new class

@@ -7,6 +7,7 @@ module.exports = {
     addClassInstructor,
     getDayId,
     addClassDay,
+    getDays,
     removeClass,
     updateClass,
     getAccountIds,
@@ -55,6 +56,13 @@ function addClassDay(classId, dayId){
             classId,
             dayId
         })
+}
+
+function getDays(classId){
+    return db.select('day')
+        .from('days')
+        .where({ classId })
+        .join('classDays', 'dayId', 'days.id');
 }
 
 function removeClass(id){
