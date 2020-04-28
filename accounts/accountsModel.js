@@ -6,7 +6,9 @@ module.exports = {
     getClassType,
     getImgUrl,
     getByClientId,
-    getByInstructorId
+    getByInstructorId,
+    getInstructor,
+    getDays
 }
 
 function getClassesById(id, isInstructor){
@@ -40,4 +42,18 @@ function getByClientId(id){
 
 function getByInstructorId(id){
     return db.select('instructorId').from('classInstructor').where('instructorId', id);
+}
+
+function getInstructor(classId){
+    return db.select('displayName')
+        .from('accounts')
+        .where({classId})
+        .join('classInstructor', 'instructorId', 'accounts.id');
+}
+
+function getDays(classId){
+    return db.select('day')
+        .from('days')
+        .where({ classId })
+        .join('classDays', 'dayId', 'days.id');
 }

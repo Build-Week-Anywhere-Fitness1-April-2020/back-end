@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const User = require('./accountsModel');
 
+// MISSING: instructor name
+// MISSING: days
+
 // Params: accountId
 router.get('/:id/classesAttending', validateClientId, async (req, res) => {
     try {
@@ -11,10 +14,18 @@ router.get('/:id/classesAttending', validateClientId, async (req, res) => {
             let foundClass = await User.getClasses(classIds[i].classId);
             let classType = await User.getClassType(foundClass[0].classType);
             let imgUrl = await User.getImgUrl(foundClass[0].imgUrl);
+            let instructor = await User.getInstructor(foundClass[0].id);
+            let foundDays = await User.getDays(foundClass[0].id);
+            let days = [];
+            for(let k=0; k<foundDays.length; k++){
+                days.push(foundDays[k].day);
+            }
             classes.push({
                 ...foundClass[0],
                 classType: classType[0].type,
-                imgUrl: imgUrl[0].url
+                imgUrl: imgUrl[0].url,
+                instructor: instructor[0].displayName,
+                days
             })
             
         }
@@ -34,10 +45,18 @@ router.get('/:id/classesInstructing', validateInstructorId, async (req, res) => 
             let foundClass = await User.getClasses(classIds[i].classId);
             let classType = await User.getClassType(foundClass[0].classType);
             let imgUrl = await User.getImgUrl(foundClass[0].imgUrl);
+            let instructor = await User.getInstructor(foundClass[0].id);
+            let foundDays = await User.getDays(foundClass[0].id);
+            let days = [];
+            for(let k=0; k<foundDays.length; k++){
+                days.push(foundDays[k].day);
+            }
             classes.push({
                 ...foundClass[0],
                 classType: classType[0].type,
-                imgUrl: imgUrl[0].url
+                imgUrl: imgUrl[0].url,
+                instructor: instructor[0].displayName,
+                days
             })
         }
         res.status(200).json(classes);

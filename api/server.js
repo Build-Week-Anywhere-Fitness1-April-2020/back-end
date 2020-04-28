@@ -18,7 +18,7 @@ server.use(express.json());
 // ADD AUTHENTICATOR BACK JOSIAH
 server.use('/auth', authRouter);
 server.use('/classes', classesRouter);
-server.use('/accounts', authenticator, accountsRouter);
+server.use('/accounts', accountsRouter);
 
 server.get('/', (req, res) => {
     res.status(200).json({ message: 'Server up' })
