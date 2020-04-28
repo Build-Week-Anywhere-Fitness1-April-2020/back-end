@@ -37,7 +37,6 @@ describe('Add class', () => {
                 Authorization: token
             })
             .send({
-                id: null,
                 name: '',
                 dateTime: '',
                 duration: '',
@@ -47,16 +46,15 @@ describe('Add class', () => {
                 classType: null,
                 imgUrl: null,
                 equiptmentRequired: '',
-            arrivalDescription: '',
-            additionalInfo: null,
-            cost: 23.56,
-            description: '',
-            address: '',
-            startDate: ''
-                
+                arrivalDescription: '',
+                additionalInfo: null,
+                cost: 23.56,
+                description: '',
+                address: '',
+                startDate: ''
             })
-        expect(res.status).toBe(500);
-        expect(res.body.message).toBe('Failed to create new class');
+        expect(res.status).toBe(401);
+        expect(res.body.message).toBe('Missing field');
         done();
     })
     it('Successfully add a class', async done => {
@@ -71,7 +69,6 @@ describe('Add class', () => {
                 Authorization: token
             })
             .send({
-                id: 1,
                 name: 'Class name',
                 time: 'Class time',
                 duration: 1.5,
@@ -131,8 +128,8 @@ describe('Add class', () => {
     })
 })
 
-
-    it('200 status get by ID', async done => {
+describe('GET class by id', () => {
+    it('201 status', async done => {
         const token = generateToken({
             id: 1
         });
@@ -170,7 +167,3 @@ describe("PUT to classes/:id", function() {
         done();
     });
   });
-
-  
-
-

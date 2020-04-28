@@ -15,7 +15,7 @@ describe('201 Post to register', () => {
             .send({
                 username: 'josiahroa18',
                 email: 'josiahroa18@gmail.com',
-                password: 'josiahroa',
+                password: 'josiahroa',                
                 roles: ['instructor']
             })
         expect(res.status).toBe(201);
