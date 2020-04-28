@@ -7,7 +7,12 @@ module.exports = {
     removeClass,
     updateClass,
     getAccountIds,
-    getAccountById
+    getAccountById,
+    getClassInstructor,
+    getImgUrl,
+    addAttendee,
+    removeAttendee,
+    getClassType
 }
 
 function getClasses(){
@@ -21,10 +26,11 @@ function getById(id){
 }
 
 function addClass(newClass){
+
     return db('classes')
         .insert(newClass, 'id')
         .then(id => {
-            return getById(id[0]);
+            return getById(id[0])
         })
 }
 
@@ -46,4 +52,34 @@ function getAccountIds(classId){
 
 function getAccountById(id){
     return db('accounts').where({id});
+}
+
+function getClassInstructor(classId){
+    return db.select('a.displayName')
+        .from('classInstructor as ci')
+        .where({classId})
+        .join('accounts as a', 'ci.instructorId', 'a.id')
+}
+
+function getImgUrl(classImg){
+    return db.select('url')
+        .from('imgOptions')
+        .where('id', classImg);
+}
+
+function addAttendee(id) {
+  
+    return db("classAttendee").insert(id);
+  }
+
+  function removeAttendee(accountId, classId) {
+    return db("classAttendee")
+      .where({ accountId: accountId, classId: classId })
+      .del();
+  }
+
+function getClassType(classType){
+    return db.select('type')
+        .from('classTypes')
+        .where('id', classType)
 }

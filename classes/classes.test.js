@@ -145,7 +145,7 @@ describe('GET class by id', () => {
         done();
         
     })
-
+})
 
 describe("PUT to classes/:id", function() {
     it('200 status', async done => {
