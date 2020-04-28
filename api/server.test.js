@@ -4,7 +4,7 @@ const server = require('./server');
 
 describe('Server', () => {
     it('Testing enviornment', () => {
-        expect(process.env.DB_ENV).toBe('test');
+        expect(process.env.TEST_DB).toBe('af_test');
     })
     it('Server running', async done => {
         const res = await request(server).get('/')
@@ -12,7 +12,7 @@ describe('Server', () => {
         done();
     })
     it('Testing DB path', () => {
-        expect(process.env.TEST_DB).toBe('postgres://localhost/af_test');
+        expect(process.env.DB_ENV).toBe('test');
     })
 });
 

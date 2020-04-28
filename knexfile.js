@@ -5,9 +5,14 @@ module.exports = {
 
   development: {
     client: 'pg',
-    connection: `${process.env.DATABASE_URL}`,
+    connection: {
+      host:     process.env.HOST || '127.0.0.1',
+      user:     process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DBNAME
+    },
     migrations: {
-      directory: './data/migrations'
+      directory: './data/migrations',
     },
     seeds: {
       directory: './data/seeds'
@@ -16,7 +21,12 @@ module.exports = {
 
   test: {
     client: 'pg',
-    connection: `${process.env.TEST_DB}`,
+    connection: {
+      host:     process.env.HOST || '127.0.0.1',
+      user:     process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.TEST_DB
+    },
     migrations: {
       directory: './data/migrations'
     },
