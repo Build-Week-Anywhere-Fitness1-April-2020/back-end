@@ -5,6 +5,7 @@ require('dotenv').config()
 
 const authRouter = require('../auth/authRouter');
 const classesRouter = require('../classes/classesRouter');
+const accountsRouter = require('../accounts/accountsRouter');
 const authenticator = require('../auth/authenticator');
 
 const server = express();
@@ -15,6 +16,7 @@ server.use(express.json());
 
 server.use('/auth', authRouter);
 server.use('/classes', authenticator, classesRouter);
+server.use('/accounts', authenticator, accountsRouter);
 
 server.get('/', (req, res) => {
     res.status(200).json({ message: 'Server up' })

@@ -1,17 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const Class = require('../classes/classesModel');
-// const Attendee = require('../')
+const Class = require('./classesModel');
 
 
-/////////////////~~~~~~~~~~~CLASSES SECTION~~~~~~~~~~~~~~~~~~~~~~~///////////
 router.get('/', (req, res) => {
     Class.getClasses()
     .then(classes => {
         res.status(200).json(classes);
     })
     .catch(err => {
-        res.status(500).json({message: 'Failed to get classes'} );
+        res.status(500).json({
+          message: 'Failed to get classes',
+          error: err
+        });
     })
 })
 
@@ -25,18 +26,33 @@ router.get('/:id', (req, res) => {
     })
 })
 
-router.post('/', (req, res) => {
+/*
+    Expect
+    {
+        name,
+        dateTime,
+        duration,
+        intensity,
+        location,
+        maxSize,
+        classType,
+        imgUrl
+    }
+*/
+router.post('/', validateNewClass, (req, res) => {
   const classData = req.body;
 
   Class.addClass(classData)
-  .then(classes => {
+  .then(() => {
     res.status(201).json({ message: "Post Sucessful" });
   })
-  .catch (err => {
-    res.status(500).json({ message: 'Failed to create new class' });
+  .catch(err => {
+    res.status(500).json({ 
+      message: 'Failed to create new class',
+      error: err
+    });
   });
 });
-
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
@@ -50,10 +66,12 @@ router.delete('/:id', (req, res) => {
     }
   })
   .catch(err => {
-    res.status(500).json({ message: 'Failed to delete class' });
+    res.status(500).json({ 
+      message: 'Failed to delete class',
+      error: err
+    });
   });
 });
-
 
 router.put('/:id', (req, res) => {
   const { id } = req.params;
@@ -71,7 +89,10 @@ router.put('/:id', (req, res) => {
     }
   })
   .catch (err => {
-    res.status(500).json({ message: 'Failed to update Class' });
+    res.status(500).json({ 
+      message: 'Failed to update Class',
+      error: err
+    });
   });
 });
 
@@ -85,7 +106,10 @@ router.post('/', (req, res) => {
     res.status(201).json(attendee);
   })
   .catch (err => {
-    res.status(500).json({ message: 'Failed to create new Attendee' });
+    res.status(500).json({ 
+      message: 'Failed to create new Attendee',
+      error: err
+    });
   });
 });
 
@@ -95,52 +119,34 @@ router.delete('/:id', (req, res) => {
   Attendee.removeAttendee(id)
   .then(deleted => {
     if (deleted) {
-      res.json({ removed: deleted });
+      res.json({ 
+        message: 'Attendee successfully deleted',
+        removed: deleted 
+      });
     } else {
-      res.status(404).json({ message: 'Could not find Attendee with given id' });
+      res.status(404).json({ 
+        message: 'Could not find Attendee with given id' 
+      });
     }
   })
   .catch(err => {
-    res.status(500).json({ message: 'Failed to delete Attendee' });
+    res.status(500).json({ 
+      message: 'Failed to delete Attendee',
+      error: err
+    });
   });
 });
 
 
-
-
-/*
-    Expect
-    {
-        name,
-        dateTime,
-        duration,
-        intensity,
-        location,
-        maxSize,
-        classType,
-        imgUrl
+function validateNewClass(req, res, next){
+    const body = req.body;
+    if(body.name || body.time || body.duration || body.intensity || body.location || body.maxSize || body.classType || body.imgUrl){
+        next();
+    }else{
+        res.status(401).json({
+            message: 'Missing field'
+        })
     }
-*/
-// router.post('/', validateNewClass, (req, res) => {
-//     Class.addClass(req.body)
-//     .then(newClass => {
-//         res.status(201).json(newClass);
-//     })
-//     .catch(err => {
-//         console.log(err);
-//         res.status(500).json(err);
-//     })
-// })
-
-// function validateNewClass(req, res, next){
-//     const body = req.body;
-//     if(body.name || body.time || body.duration || body.intensity || body.location || body.maxSize || body.classType || body.imgUrl){
-//         next();
-//     }else{
-//         res.status(401).json({
-//             message: 'Missing field'
-//         })
-//     }
-// }
+}
 
 module.exports = router;

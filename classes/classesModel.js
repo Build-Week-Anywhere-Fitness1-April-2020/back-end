@@ -11,13 +11,13 @@ module.exports = {
 }
 
 function getClasses(){
-    return db('classes')
+    return db('classes');
    
 }
 
 function getById(id){
     return db('classes')
-        .where({id})
+        .where({id});
 }
 
 function addClass(newClass){
@@ -37,19 +37,20 @@ function removeClass(id){
 function updateClass(changes, id){
     return db('classes')
     .where({id})
-    .update(changes)
+    .update(changes);
     
 }
 
-function addAttendee(newAttendee, id){
+function addAttendee(newAttendee){
     return db('classAttendees')
-    .insert(newAttendee)
+    .insert(newAttendee);
 }
+
 function removeAttendee(id){
     return db('classAttendees')
     .where({id})
     .del()
     .then(() => {
         return getClasses(id);
-      });
+    });
 }
