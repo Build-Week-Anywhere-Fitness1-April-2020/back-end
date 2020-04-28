@@ -129,7 +129,7 @@ describe('Add class', () => {
 })
 
 describe('GET class by id', () => {
-    it('201 status', async done => {
+    it('200 status', async done => {
         const token = generateToken({
             id: 1
         });

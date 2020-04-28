@@ -4,6 +4,9 @@ module.exports = {
     getClasses,
     getById,
     addClass,
+    addClassInstructor,
+    getDayId,
+    addClassDay,
     removeClass,
     updateClass,
     getAccountIds,
@@ -29,8 +32,28 @@ function addClass(newClass){
 
     return db('classes')
         .insert(newClass, 'id')
-        .then(id => {
-            return getById(id[0])
+}
+
+function addClassInstructor(instructorId, classId){
+    return db('classInstructor')
+        .insert({
+            instructorId,
+            classId
+        })
+}
+
+function getDayId(day){
+    return db.select('id')
+        .from('days')
+        .where({ day })
+        .first();
+}
+
+function addClassDay(classId, dayId){
+    return db('classDays')
+        .insert({
+            classId,
+            dayId
         })
 }
 
@@ -68,13 +91,19 @@ function getImgUrl(classImg){
 }
 
 function addAttendee(id) {
-  
-    return db("classAttendee").insert(id);
+  return db("classAttendee").insert(id);
+    console.log(id)
   }
 
   function removeAttendee(accountId, classId) {
     return db("classAttendee")
+
+    .insert({
+        accountId,
+        classId
+    })
       .where({ accountId: accountId, classId: classId })
+
       .del();
   }
 

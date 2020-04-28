@@ -45,19 +45,42 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.post('/', validateNewClass, (req, res) => {
-  const classData = req.body;
+router.post('/', validateNewClass, async (req, res) => {
+  try {
+    let instructor = req.body.accountId;
+    let days = [];
+    for(let i=0; i<req.body.days.length; i++){
+      days.push(req.body.days[i]);
+    }
 
-  Class.addClass(classData)
-  .then(() => {
-    res.status(201).json({ message: "Post Sucessful" });
-  })
-  .catch(err => {
-    res.status(500).json({ 
-      message: 'Failed to create new class',
-      error: err
-    });
-  });
+    const newClass = {
+      ...req.body
+    }
+
+    delete newClass.accountId;
+    delete newClass.days;
+
+    // Add new class to classes table and get the id of the new class
+    let id = await Class.addClass(newClass);
+
+    // Add classId and instructor id to to classInstructor table
+    await Class.addClassInstructor(instructor, id[0]);
+
+    // Add class days to classDays table
+    for(let i=0; i < days.length; i++){
+      let dayId = await Class.getDayId(days[i]);
+      console.log(dayId);
+      await Class.addClassDay(id[0], dayId.id);
+    }
+
+    res.status(201).json({
+      message: 'Class successfully created'
+    })
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 router.delete('/:id', (req, res) => {
@@ -122,10 +145,11 @@ router.get('/:id/attendees', async (req, res) => {
 
 router.post("/addattendee/:id", async (req, res) => {
   const classId = parseInt(req.params.id);
-  const accountId = parseInt(req.body);
+  const accountId = parseInt(req.body.accounts);
   const classes = { classId, accountId };
   try {
     await Class.addAttendee(classes);
+    console.log(classes)
     res.status(201).json({ message: "Added Attendee" });
   } catch (err) {
     res.status(500).json({ message: "no work :(", err });
