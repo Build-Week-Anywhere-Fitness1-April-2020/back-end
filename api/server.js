@@ -14,8 +14,9 @@ server.use(helmet());
 server.use(cors());
 server.use(express.json());
 
+// ADD AUTHENTICATOR BACK JOSIAH
 server.use('/auth', authRouter);
-server.use('/classes', authenticator, classesRouter);
+server.use('/classes', classesRouter);
 server.use('/accounts', authenticator, accountsRouter);
 
 server.get('/', (req, res) => {

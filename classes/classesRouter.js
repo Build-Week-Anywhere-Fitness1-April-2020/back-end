@@ -3,7 +3,7 @@ const router = express.Router();
 const Class = require('./classesModel');
 
 // Get list of classes
-router.get('/', async (req, res) => {xw
+router.get('/', async (req, res) => {
     try {
       let classList = await Class.getClasses();
       for(let i=0; i<classList.length; i++){
@@ -32,7 +32,6 @@ router.get('/:id', async (req, res) => {
       let instructor = await Class.getClassInstructor(req.params.id);
       let imgUrl = await Class.getImgUrl(foundClass[0].imgUrl);
       let classType = await Class.getClassType(foundClass[0].classType);
-      console.log(classType);
       res.status(200).json({
         ...foundClass[0],
         instructor: instructor[0].displayName,
@@ -45,19 +44,64 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.post('/', validateNewClass, (req, res) => {
-  const classData = req.body;
+/*
+  Expect:
+  {
+    accountId: int (the user creating this class) *,
+    name: string (name of class) *,
+    time: string (time for class) *,
+    duration: string *,
+    days: [] *,
+    intensity *,
+    location *,
+    maxSize *,
+    classType: id*, (you will have this from the class types options endpoint we will give you)
+    imgUrl: id *, (you will have this from the img options endpointwe will give you)
+    equipmentRequired,
+    arrivalDescription,
+    additionalInfo,
+    cost *,
+    courseDescription *,
+    address *,
+    startDate *
+  }
+*/
+router.post('/', validateNewClass, async (req, res) => {
+  try {
+    let instructor = req.body.accountId;
+    let days = [];
+    for(let i=0; i<req.body.days.length; i++){
+      days.push(req.body.days[i]);
+    }
 
-  Class.addClass(classData)
-  .then(() => {
-    res.status(201).json({ message: "Post Sucessful" });
-  })
-  .catch(err => {
-    res.status(500).json({ 
-      message: 'Failed to create new class',
-      error: err
-    });
-  });
+    const newClass = {
+      ...req.body
+    }
+
+    delete newClass.accountId;
+    delete newClass.days;
+
+    // Add new class to classes table and get the id of the new class
+    let id = await Class.addClass(newClass);
+
+    // Add classId and instructor id to to classInstructor table
+    await Class.addClassInstructor(instructor, id[0]);
+
+    // Add class days to classDays table
+    for(let i=0; i < days.length; i++){
+      let dayId = await Class.getDayId(days[i]);
+      console.log(dayId);
+      await Class.addClassDay(id[0], dayId.id);
+    }
+
+    res.status(201).json({
+      message: 'Class successfully created'
+    })
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 router.delete('/:id', (req, res) => {
