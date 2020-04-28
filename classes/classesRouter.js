@@ -98,44 +98,21 @@ router.put('/:id', (req, res) => {
 
 
 /////////////////~~~~~~~~~~~ATTENDEE SECTION~~~~~~~~~~~~~~~~~~~~~~~///////////
-router.post('/', (req, res) => {
-  const attendeeData = req.body;
-
-  Attendee.addAttendee(attendeeData)
-  .then(attendee => {
-    res.status(201).json(attendee);
-  })
-  .catch (err => {
-    res.status(500).json({ 
-      message: 'Failed to create new Attendee',
-      error: err
+// Params: classId
+// Returns: list of attendee objects for a given class
+router.get('/:id/attendees', async (req, res) => {
+  // Get the account ids that match the given class
+  const accountIds = await Class.getAccountIds(req.params.id);
+  let accounts = [];
+  for(let i=0; i<accountIds.length; i++){
+    let account = await Class.getAccountById(accountIds[i].accountId);
+    accounts.push({
+      ...account[0],
+      password: undefined
     });
-  });
-});
-
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-
-  Attendee.removeAttendee(id)
-  .then(deleted => {
-    if (deleted) {
-      res.json({ 
-        message: 'Attendee successfully deleted',
-        removed: deleted 
-      });
-    } else {
-      res.status(404).json({ 
-        message: 'Could not find Attendee with given id' 
-      });
-    }
-  })
-  .catch(err => {
-    res.status(500).json({ 
-      message: 'Failed to delete Attendee',
-      error: err
-    });
-  });
-});
+  }
+  res.status(200).json(accounts);
+})
 
 
 function validateNewClass(req, res, next){
