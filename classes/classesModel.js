@@ -99,41 +99,24 @@ function getImgUrl(classImg){
         .where('id', classImg);
 }
 
-// function addAttendee(accountid, classId) {
-//     return db("classattendee")
-//       .insert({accountid, classId})
-//       .then(()=> db("classAttendees").where({accountid, classId}))
-  
-//     }
-
-//     function getAccountsId(id){
-//         return db.select('id')
-//             .from('accounts')
-//             .where({ id })
-//             .first();
-//     }
-
-function addAttendee(accountId, classId){
-    return db.select('accountId')
-        .from('classAttendees')
-        .insert({ accountId })
+function addAttendee(newAttendee){
+    return db('classAttendees')
+        .insert(newAttendee);
       
 }
 
-    function getAccountsId(id){
-        return db.select('id')
-            .from('accounts')
-            .where({ id })
-            .first();
-    }
+function getAccountsId(id){
+    return db.select('id')
+        .from('accounts')
+        .where({ id })
+        .first();
+}
 
-
-
-  function removeAttendee(accountId, classId) {
-    return db("classAttendee")
-      .where({ accountId: accountId, classId: classId })
-      .del();
-  }
+function removeAttendee(accountId, classId) {
+    return db("classAttendees")
+        .where({ accountId: accountId, classId: classId })
+        .del();
+}
 
 function getClassType(classType){
     return db.select('type')

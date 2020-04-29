@@ -160,6 +160,8 @@ router.put('/:id', (req, res) => {
 
 
 /////////////////~~~~~~~~~~~ATTENDEE SECTION~~~~~~~~~~~~~~~~~~~~~~~///////////
+
+
 // Params: classId
 // Returns: list of attendee objects for a given class
 router.get('/:id/attendees', async (req, res) => {
@@ -176,27 +178,41 @@ router.get('/:id/attendees', async (req, res) => {
   res.status(200).json(accounts);
 })
 
-
-  router.post('/attendee/:id', async (req, res) => {
-    try {
-        const classes = await Class.addAttendee();
-        res.status(200).json(classes);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
-    }
-});
-
-router.delete("/removeattendee/:id", (req, res) => {
-  const classId = req.params.id;
-  const accountId = req.body;
-
-  Class.removeAttendee(classId, accountId)
-    .then(classes => {
-      res.status(200).json(classes);
+/*
+{
+  accountId,
+  classId
+}
+ */
+router.post('/add-attendee', (req, res) => {
+    Class.addAttendee(req.body)
+    .then(() => {
+      res.status(201).json({
+        message: 'User successfully added to class'
+      })
     })
     .catch(err => {
-      res.status(500).json({ message: "client still enrolled in class" });
+      res.status(500).json({
+        message: 'Error adding user to database',
+        error: err
+      })
+    })
+});
+
+// Params: accountid, classid
+router.delete("/:classId/remove-attendee/:accountId", (req, res) => {
+  Class.removeAttendee(req.params.accountId, req.params.classId)
+    .then(() => {
+      res.status(200).json({
+        message: 'User successfully removed from class'
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ 
+        message: "client still enrolled in class",
+        error: err
+      });
     });
 });
 

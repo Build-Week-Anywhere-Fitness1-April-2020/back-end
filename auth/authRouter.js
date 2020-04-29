@@ -32,7 +32,6 @@ router.post('/register', validateRegisterBody, (req, res) => {
        password: req.body.password,
        displayName: req.body.displayName ? req.body.displayName : req.body.username,
        gender: req.body.gender ? req.body.gender : 'none'
-
    })
    .then(async id => {
        for(let i=0; i<req.body.roles.length; i++){
@@ -57,13 +56,13 @@ router.post('/register', validateRegisterBody, (req, res) => {
    });
 });
 
-router.post('/login', validateLoginBody, (req, res) => {
-    const { username, password } = req.body;
+router.post('/login', validateLoginBody, validateRole, (req, res) => {
+    const { username, password, role } = req.body;
     User.getByUsername(username)
     .then(user => {
         if(user){
             if(bcrypt.compareSync(password, user.password)){
-                const token = generateToken(user);
+                const token = generateToken(user, role);
                 res.status(201).json({
                     token: token,
                     role: req.body.role,
@@ -90,25 +89,61 @@ router.post('/login', validateLoginBody, (req, res) => {
 })
 
 function validateRegisterBody(req, res, next){
-    const body = req.body;
-    if(body.username.length > 6 || body.email.length > 1 || body.password.length > 8 || body.roles.length > 1){
-        next();
-    }else{
-        res.status(401).json({ 
-            message: 'A field is missing or too short' 
-        });
-    }
+    const {username, password, roles, email} = req.body;
+    User.getByUsername(req.body.username)
+    .then(user=> {
+        // Look for a duplicate username
+        if(user){
+            res.status(400).json({
+                message: 'Username already exists'
+            })
+        }else{
+            // Make sure required fiels are present
+            if(!username || !password || !roles || !email){
+                res.status(401).json({
+                    message: 'Missing field',
+                })
+            }else{
+                next();
+            }
+        }
+    })
+    .catch(err => {
+        res.status(500).json({
+            message: 'Error registering user to database',
+            error: err
+        })
+    });
 }
 
 function validateLoginBody(req, res, next){
-    const body = req.body;
-    if(body.username.length > 1 || body.password.length > 1 || body.role.length > 1){
-        next();
-    }else{
+    const {username, password, role}= req.body;
+    if(!username || !password || !role){
         res.status(401).json({
             message: 'A field is missing'
         })
+    }else{
+        next();
     }
+}
+
+async function validateRole(req, res, next){
+    const user = await User.getByUsername(req.body.username);
+    const roles = await User.getRoles(user.id);
+    let roleMatch = false;
+    for(let i=0; i<roles.length; i++){
+        if(req.body.role === roles[i].roleType){
+            roleMatch = true
+        }
+    }
+    if(roleMatch){
+        next();
+    }else{
+        res.status(401).json({
+            message: 'The user does not have access to that role'
+        })
+    }
+    
 }
 
 module.exports = router;
