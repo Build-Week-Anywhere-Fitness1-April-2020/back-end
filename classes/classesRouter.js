@@ -176,16 +176,15 @@ router.get('/:id/attendees', async (req, res) => {
   res.status(200).json(accounts);
 })
 
-router.post("/addattendee/:id", async (req, res) => {
-  const classId = parseInt(req.params.id);
-  const accountId = parseInt(req.body);
-  const classes = { classId, accountId };
-  try {
-    await Class.addAttendee(classes);
-    res.status(201).json({ message: "Added Attendee" });
-  } catch (err) {
-    res.status(500).json({ message: "no work :(", err });
-  }
+
+  router.post('/attendee/:id', async (req, res) => {
+    try {
+        const classes = await Class.addAttendee();
+        res.status(200).json(classes);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
 });
 
 router.delete("/removeattendee/:id", (req, res) => {
