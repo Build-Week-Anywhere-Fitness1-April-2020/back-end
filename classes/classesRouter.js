@@ -10,11 +10,17 @@ router.get('/', async (req, res) => {
         let instructor = await Class.getClassInstructor(classList[i].id);
         let imgUrl = await Class.getImgUrl(classList[i].imgUrl);
         let classType = await Class.getClassType(classList[i].classType);
+        let foundDays = await Class.getDays(classList[i].id);
+        let days = [];
+        for(let k=0; k<foundDays.length; k++){
+          days.push(foundDays[k].day);
+        }
         classList[i] = {
           ...classList[i],
           instructor: instructor[0].displayName,
           imgUrl: imgUrl[0].url,
-          classType: classType[0].type
+          classType: classType[0].type,
+          days
         }
       }
       res.status(200).json(classList);
@@ -32,12 +38,17 @@ router.get('/:id', async (req, res) => {
       let instructor = await Class.getClassInstructor(req.params.id);
       let imgUrl = await Class.getImgUrl(foundClass[0].imgUrl);
       let classType = await Class.getClassType(foundClass[0].classType);
-      console.log(classType);
+      let foundDays = await Class.getDays(req.params.id);
+      let days = [];
+      for(let i=0; i<foundDays.length; i++){
+        days.push(foundDays[i].day);
+      }
       res.status(200).json({
         ...foundClass[0],
         instructor: instructor[0].displayName,
         imgUrl: imgUrl[0].url,
-        classType: classType[0].type
+        classType: classType[0].type,
+        days
       });
     }
     catch(err){
@@ -45,9 +56,31 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+/*
+  Expect:
+  {
+    instructor: int (the user creating this class) *,
+    name: string (name of class) *,
+    time: string (time for class) *,
+    duration: string *,
+    days: [] *,
+    intensity *,
+    location *,
+    maxSize *,
+    classType: id*, (you will have this from the class types options endpoint we will give you)
+    imgUrl: id *, (you will have this from the img options endpointwe will give you)
+    equipmentRequired,
+    arrivalDescription,
+    additionalInfo,
+    cost *,
+    courseDescription *,
+    address *,
+    startDate *
+  }
+*/
 router.post('/', validateNewClass, async (req, res) => {
   try {
-    let instructor = req.body.accountId;
+    let instructor = req.body.instructor;
     let days = [];
     for(let i=0; i<req.body.days.length; i++){
       days.push(req.body.days[i]);
@@ -57,7 +90,7 @@ router.post('/', validateNewClass, async (req, res) => {
       ...req.body
     }
 
-    delete newClass.accountId;
+    delete newClass.instructor;
     delete newClass.days;
 
     // Add new class to classes table and get the id of the new class
@@ -143,17 +176,15 @@ router.get('/:id/attendees', async (req, res) => {
   res.status(200).json(accounts);
 })
 
-router.post("/addattendee/:id", async (req, res) => {
-  const classId = parseInt(req.params.id);
-  const accountId = parseInt(req.body.accounts);
-  const classes = { classId, accountId };
-  try {
-    await Class.addAttendee(classes);
-    console.log(classes)
-    res.status(201).json({ message: "Added Attendee" });
-  } catch (err) {
-    res.status(500).json({ message: "no work :(", err });
-  }
+
+  router.post('/attendee/:id', async (req, res) => {
+    try {
+        const classes = await Class.addAttendee();
+        res.status(200).json(classes);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
 });
 
 router.delete("/removeattendee/:id", (req, res) => {

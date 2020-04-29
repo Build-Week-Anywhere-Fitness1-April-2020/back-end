@@ -7,6 +7,7 @@ module.exports = {
     addClassInstructor,
     getDayId,
     addClassDay,
+    getDays,
     removeClass,
     updateClass,
     getAccountIds,
@@ -15,7 +16,8 @@ module.exports = {
     getImgUrl,
     addAttendee,
     removeAttendee,
-    getClassType
+    getClassType,
+    getAccountsId
 }
 
 function getClasses(){
@@ -57,6 +59,13 @@ function addClassDay(classId, dayId){
         })
 }
 
+function getDays(classId){
+    return db.select('day')
+        .from('days')
+        .where({ classId })
+        .join('classDays', 'dayId', 'days.id');
+}
+
 function removeClass(id){
     return db('classes')
     .where({id})
@@ -90,20 +99,39 @@ function getImgUrl(classImg){
         .where('id', classImg);
 }
 
-function addAttendee(id) {
-  return db("classAttendee").insert(id);
-    console.log(id)
-  }
+// function addAttendee(accountid, classId) {
+//     return db("classattendee")
+//       .insert({accountid, classId})
+//       .then(()=> db("classAttendees").where({accountid, classId}))
+  
+//     }
+
+//     function getAccountsId(id){
+//         return db.select('id')
+//             .from('accounts')
+//             .where({ id })
+//             .first();
+//     }
+
+function addAttendee(accountId, classId){
+    return db.select('accountId')
+        .from('classAttendees')
+        .insert({ accountId })
+      
+}
+
+    function getAccountsId(id){
+        return db.select('id')
+            .from('accounts')
+            .where({ id })
+            .first();
+    }
+
+
 
   function removeAttendee(accountId, classId) {
     return db("classAttendee")
-
-    .insert({
-        accountId,
-        classId
-    })
       .where({ accountId: accountId, classId: classId })
-
       .del();
   }
 

@@ -66,7 +66,11 @@ router.post('/login', validateLoginBody, (req, res) => {
                 const token = generateToken(user);
                 res.status(201).json({
                     token: token,
-                    role: req.body.role
+                    role: req.body.role,
+                    user: {
+                        ...user,
+                        password: undefined
+                    }
                 })
             }else{
                 res.status(400).json({
