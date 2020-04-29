@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-module.exports = (user) => {
+module.exports = (user, role) => {
     const payload = {
-        sub: user.id,
+        userId: user.id,
+        role
     };
     const secret = process.env.JWT_SECRET || 'This is a secret';
     const options = {
