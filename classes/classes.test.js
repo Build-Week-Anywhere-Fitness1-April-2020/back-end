@@ -204,10 +204,8 @@ describe("PUT to classes/:id", function() {
         expect(token).toBeDefined();
             const data = {
            
-                username: 'rileye123',
-                email: "riley@gmail.com",
-                displayName: "Riley",
-                gender: "Female"
+               classId:1,
+               accountId:3
             };
     
         it("should return success 201", async () => {
