@@ -80,7 +80,7 @@ exports.up = function(knex) {
             .onDelete('CASCADE') 
             .onUpdate('CASCADE')
 
-            table.text('equiptmentRequired');
+            table.text('equipmentRequired');
 
             table.text('arrivalDescription');
 
@@ -89,7 +89,7 @@ exports.up = function(knex) {
             table.double('cost')
             .notNullable();
 
-            table.text('description')
+            table.text('courseDescription')
             .notNullable();
 
             table.text('address')

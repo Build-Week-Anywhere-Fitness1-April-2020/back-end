@@ -2,56 +2,118 @@ const express = require('express');
 const router = express.Router();
 const Class = require('./classesModel');
 
-
-router.get('/', (req, res) => {
-    Class.getClasses()
-    .then(classes => {
-        res.status(200).json(classes);
-    })
-    .catch(err => {
-        res.status(500).json({
-          message: 'Failed to get classes',
-          error: err
-        });
-    })
+// Get list of classes
+router.get('/', async (req, res) => {
+    try {
+      let classList = await Class.getClasses();
+      for(let i=0; i<classList.length; i++){
+        let instructor = await Class.getClassInstructor(classList[i].id);
+        let imgUrl = await Class.getImgUrl(classList[i].imgUrl);
+        let classType = await Class.getClassType(classList[i].classType);
+        let foundDays = await Class.getDays(classList[i].id);
+        let days = [];
+        for(let k=0; k<foundDays.length; k++){
+          days.push(foundDays[k].day);
+        }
+        classList[i] = {
+          ...classList[i],
+          instructor: instructor[0].displayName,
+          imgUrl: imgUrl[0].url,
+          classType: classType[0].type,
+          days
+        }
+      }
+      res.status(200).json(classList);
+    }
+    catch(err){
+      res.status(500).json(err);
+    }
+    
 })
 
-router.get('/:id', (req, res) => {
-    Class.getById(req.params.id)
-    .then(newClass => {
-        res.status(200).json(newClass);
-    })
-    .catch(err => {
-        res.status(500).json(err);
-    })
+// Get class by id
+router.get('/:id', async (req, res) => {
+    try {
+      let foundClass = await Class.getById(req.params.id);
+      let instructor = await Class.getClassInstructor(req.params.id);
+      let imgUrl = await Class.getImgUrl(foundClass[0].imgUrl);
+      let classType = await Class.getClassType(foundClass[0].classType);
+      let foundDays = await Class.getDays(req.params.id);
+      let days = [];
+      for(let i=0; i<foundDays.length; i++){
+        days.push(foundDays[i].day);
+      }
+      res.status(200).json({
+        ...foundClass[0],
+        instructor: instructor[0].displayName,
+        imgUrl: imgUrl[0].url,
+        classType: classType[0].type,
+        days
+      });
+    }
+    catch(err){
+      res.status(500).json(err);
+    }
 })
 
 /*
-    Expect
-    {
-        name,
-        dateTime,
-        duration,
-        intensity,
-        location,
-        maxSize,
-        classType,
-        imgUrl
-    }
+  Expect:
+  {
+    instructor: int (the user creating this class) *,
+    name: string (name of class) *,
+    time: string (time for class) *,
+    duration: string *,
+    days: [] *,
+    intensity *,
+    location *,
+    maxSize *,
+    classType: id*, (you will have this from the class types options endpoint we will give you)
+    imgUrl: id *, (you will have this from the img options endpointwe will give you)
+    equipmentRequired,
+    arrivalDescription,
+    additionalInfo,
+    cost *,
+    courseDescription *,
+    address *,
+    startDate *
+  }
 */
-router.post('/', validateNewClass, (req, res) => {
-  const classData = req.body;
+router.post('/', validateNewClass, async (req, res) => {
+  try {
+    let instructor = req.body.instructor;
+    let days = [];
+    for(let i=0; i<req.body.days.length; i++){
+      days.push(req.body.days[i]);
+    }
 
-  Class.addClass(classData)
-  .then(() => {
-    res.status(201).json({ message: "Post Sucessful" });
-  })
-  .catch(err => {
-    res.status(500).json({ 
-      message: 'Failed to create new class',
-      error: err
-    });
-  });
+    const newClass = {
+      ...req.body
+    }
+
+    delete newClass.instructor;
+    delete newClass.days;
+
+    // Add new class to classes table and get the id of the new class
+    let id = await Class.addClass(newClass);
+
+    // Add classId and instructor id to to classInstructor table
+    await Class.addClassInstructor(instructor, id[0]);
+
+    // Add class days to classDays table
+    for(let i=0; i < days.length; i++){
+      let dayId = await Class.getDayId(days[i]);
+      console.log(dayId);
+      await Class.addClassDay(id[0], dayId.id);
+    }
+
+    res.status(201).json({
+      message: 'Class successfully created'
+    })
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 router.delete('/:id', (req, res) => {
@@ -98,6 +160,8 @@ router.put('/:id', (req, res) => {
 
 
 /////////////////~~~~~~~~~~~ATTENDEE SECTION~~~~~~~~~~~~~~~~~~~~~~~///////////
+
+
 // Params: classId
 // Returns: list of attendee objects for a given class
 router.get('/:id/attendees', async (req, res) => {
@@ -113,6 +177,45 @@ router.get('/:id/attendees', async (req, res) => {
   }
   res.status(200).json(accounts);
 })
+
+/*
+{
+  accountId,
+  classId
+}
+ */
+router.post('/add-attendee', (req, res) => {
+    Class.addAttendee(req.body)
+    .then(() => {
+      res.status(201).json({
+        message: 'User successfully added to class'
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: 'Error adding user to database',
+        error: err
+      })
+    })
+});
+
+// Params: accountid, classid
+router.delete("/:classId/remove-attendee/:accountId", (req, res) => {
+  Class.removeAttendee(req.params.accountId, req.params.classId)
+    .then(() => {
+      res.status(200).json({
+        message: 'User successfully removed from class'
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ 
+        message: "client still enrolled in class",
+        error: err
+      });
+    });
+});
+
 
 
 function validateNewClass(req, res, next){

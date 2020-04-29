@@ -4,10 +4,20 @@ module.exports = {
     getClasses,
     getById,
     addClass,
+    addClassInstructor,
+    getDayId,
+    addClassDay,
+    getDays,
     removeClass,
     updateClass,
     getAccountIds,
-    getAccountById
+    getAccountById,
+    getClassInstructor,
+    getImgUrl,
+    addAttendee,
+    removeAttendee,
+    getClassType,
+    getAccountsId
 }
 
 function getClasses(){
@@ -21,11 +31,39 @@ function getById(id){
 }
 
 function addClass(newClass){
+
     return db('classes')
         .insert(newClass, 'id')
-        .then(id => {
-            return getById(id[0]);
+}
+
+function addClassInstructor(instructorId, classId){
+    return db('classInstructor')
+        .insert({
+            instructorId,
+            classId
         })
+}
+
+function getDayId(day){
+    return db.select('id')
+        .from('days')
+        .where({ day })
+        .first();
+}
+
+function addClassDay(classId, dayId){
+    return db('classDays')
+        .insert({
+            classId,
+            dayId
+        })
+}
+
+function getDays(classId){
+    return db.select('day')
+        .from('days')
+        .where({ classId })
+        .join('classDays', 'dayId', 'days.id');
 }
 
 function removeClass(id){
@@ -48,3 +86,40 @@ function getAccountById(id){
     return db('accounts').where({id});
 }
 
+function getClassInstructor(classId){
+    return db.select('a.displayName')
+        .from('classInstructor as ci')
+        .where({classId})
+        .join('accounts as a', 'ci.instructorId', 'a.id')
+}
+
+function getImgUrl(classImg){
+    return db.select('url')
+        .from('imgOptions')
+        .where('id', classImg);
+}
+
+function addAttendee(newAttendee){
+    return db('classAttendees')
+        .insert(newAttendee);
+      
+}
+
+function getAccountsId(id){
+    return db.select('id')
+        .from('accounts')
+        .where({ id })
+        .first();
+}
+
+function removeAttendee(accountId, classId) {
+    return db("classAttendees")
+        .where({ accountId: accountId, classId: classId })
+        .del();
+}
+
+function getClassType(classType){
+    return db.select('type')
+        .from('classTypes')
+        .where('id', classType)
+}
