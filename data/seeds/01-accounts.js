@@ -6,32 +6,36 @@ exports.seed = function(knex) {
     .then(function() {
       // Inserts seed entries
       return knex("accounts").insert([
+        // Instructor & Client
         {
-          username: "instructor1",
-          email: "instructor1@gmail.com",
-          password: bcrypt.hashSync("test1"),
-          displayName: 'instructor1',
+          username: 'mark123',
+          email: 'mark@gmail.com',
+          password: bcrypt.hashSync('mark123'),
+          displayName: 'Mark',
           gender: 'Male'
         },
+        // Instructor
         {
-          username: "instructor2",
-          email: "inststructor2@gmail.com",
-          password: bcrypt.hashSync("test2"),
-          displayName: 'instructor2',
-          gender: 'Male'
-        },
-        {
-          username: "client1",
-          email: "client1@gmail.com",
-          password: bcrypt.hashSync("test3"),
-          displayName: 'client1',
+          username: 'samantha123',
+          email: 'samantha@gmail.com',
+          password: bcrypt.hashSync('samanthan123'),
+          displayName: 'Samantha',
           gender: 'Female'
         },
+        // Client
         {
-          username: "client2",
-          email: "client2@gmail.com",
-          password: bcrypt.hashSync("test4"),
-          displayName: 'client2',
+          username: 'bob123',
+          email: 'bob@gmail.com',
+          password: bcrypt.hashSync('bob123'),
+          displayName: 'bob123',
+          gender: 'Female'
+        },
+        // Client
+        {
+          username: 'riley123',
+          email: "riley@gmail.com",
+          password: bcrypt.hashSync("riley123"),
+          displayName: 'Riley',
           gender: 'Female'
         }
       ]);
