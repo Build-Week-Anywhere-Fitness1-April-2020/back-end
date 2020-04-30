@@ -57,6 +57,7 @@ describe('Add class', () => {
         expect(res.body.message).toBe('Missing field');
         done();
     })
+})
     it('Successfully add a class', async done => {
         const token = generateToken({
             id: 1
@@ -81,15 +82,17 @@ describe('Add class', () => {
                 arrivalDescription: 'Arival Time',
                 additionalInfo: null,
                 cost: 23.56,
-                description: 'Class Disc',
+                courseDescription: 'Class Disc',
                 address: 'Address',
-                startDate: 'Class Start Date'
+                startDate: 'Class Start Date',
+                instructor: 1,
+                days: ["Monday", "Tuesday"]
                 
             })
         expect(res.status).toBe(201);
-        expect(res.body.message).toBe('Post Sucessful');
         done();
     })
+    
     it('Data is stored in table', async done => {
         const token = generateToken({
             id: 1
@@ -102,7 +105,6 @@ describe('Add class', () => {
                 Authorization: token
             })
             .send({
-                id: 1,
                 name: 'Class name',
                 time: 'Class time',
                 duration: 1.5,
@@ -115,9 +117,10 @@ describe('Add class', () => {
                 arrivalDescription: 'Arival Time',
                 additionalInfo: null,
                 cost: 23.56,
-                description: 'Class Disc',
+                courseDescription: 'Class Disc',
                 address: 'Address',
-                startDate: 'Class Start Date'
+                startDate: 'Class Start Date',
+                days: ["Monday", "Tuesday"]
                 
             })
         expect(res.status).toBe(201);
@@ -126,7 +129,7 @@ describe('Add class', () => {
         expect(inserted).toHaveLength(1);
         done();
     })
-})
+
 
 describe('GET class by id', () => {
     it('200 status', async done => {
@@ -146,6 +149,7 @@ describe('GET class by id', () => {
         
     })
 })
+
 
 describe("PUT to classes/:id", function() {
     it('200 status', async done => {
@@ -167,3 +171,50 @@ describe("PUT to classes/:id", function() {
         done();
     });
   });
+
+
+  
+    it('200 GET to class attendees', async done => {
+        const token = generateToken({
+            id: 1
+        });
+        expect(token).toBeDefined();
+        
+        const res = await request(server)
+            .get('/classes/1/attendees')
+            .set({
+                Authorization: token
+            })
+        expect(res.status).toBe(200);
+        done();
+    })
+
+    describe("DELETE to /classes/:id", function() {
+        test("Returns status 400 No authorization header present", async () => {
+          const res = await request(server).delete("/classes/1");
+    
+          expect(res.status).toBe(400);
+        });
+
+
+    describe('POST classes/add-attendee', () => {
+        const token = generateToken({
+            id: 1
+        });
+        expect(token).toBeDefined();
+            const data = {
+           
+               classId:1,
+               accountId:3
+            };
+    
+        it("should return success 201", async () => {
+            const response = await request(server)
+            .set({
+              Authorization: token
+          })
+              .post("/classes/add-attendee")
+              .send(data);
+            expect(response.status).toBe(201);
+          });
+        });
